@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { BsHouseFill, BsBellFill } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi";
 import { FaUser } from "react-icons/fa";
@@ -7,11 +7,13 @@ import SidebarItem from "./SidebarItem";
 import SidebarTweetButton from "./SidebarTweetButton";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export interface Props {}
 
 const Sidebar: React.FunctionComponent<Props> = (props) => {
   const { data: user } = useCurrentUser();
+  const router = useRouter();
   const items = [
     {
       label: "Home",
@@ -27,11 +29,17 @@ const Sidebar: React.FunctionComponent<Props> = (props) => {
     },
     {
       label: "Profile",
-      href: "/users/123",
+      href: `/users/${user?.id}`,
       icon: BsHouseFill,
       auth: true,
     },
   ];
+
+  const handleLogout = useCallback(() => {
+    signOut();
+    router.push("/");
+  }, []);
+
   return (
     <div className="col-span-1 h-full pr-4 md:pr-6">
       <div className="flex flex-col items-end">

@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+import prisma from "@/lib/prismadb";
 import serverAuth from "@/lib/serverAuth";
 
 export default async function handler(
@@ -13,8 +14,22 @@ export default async function handler(
   try {
     const { currentUser } = await serverAuth(req, res);
 
-    res.status(200).json(currentUser);
+    if (!currentUser) {
+      throw new Error("No current user");
+    }
+
+    const users = await prisma.user.findMany({
+      where: {
+        id: {
+          not: currentUser.id,
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return res.status(200).json(users);
   } catch (error) {
+    console.log(error);
     res.status(404).end();
   }
 }
