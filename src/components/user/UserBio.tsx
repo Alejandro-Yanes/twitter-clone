@@ -1,11 +1,12 @@
-import useCurrentUser from "@/hooks/useCurrentUser";
-import useUser from "@/hooks/useUser";
-import React, { useMemo } from "react";
-import { format } from "date-fns";
-import Button from "../Button";
+import React, { useCallback, useMemo, useState } from "react";
+
 import { BiCalendar } from "react-icons/bi";
+import Button from "../Button";
+import { format } from "date-fns";
+import useCurrentUser from "@/hooks/useCurrentUser";
 import useEditModal from "@/hooks/zustand/useEditModal";
 import useFollow from "@/hooks/useFollow";
+import useUser from "@/hooks/useUser";
 
 export type UserBioProps = {
   userId: string;
@@ -17,7 +18,6 @@ const UserBio: React.FunctionComponent<UserBioProps> = ({ userId }) => {
   const editModal = useEditModal();
   const { isFollowing, toggleFollow } = useFollow(userId);
 
-  console.log(isFollowing);
   const createdAt = useMemo(() => {
     if (!fetchedUser?.createdAt) {
       return null;
@@ -26,18 +26,40 @@ const UserBio: React.FunctionComponent<UserBioProps> = ({ userId }) => {
     return format(new Date(fetchedUser.createdAt), "dd MMMM yyyy");
   }, [fetchedUser?.createdAt]);
 
+  const [mouseOver, setMouseOver] = useState<boolean>(false);
+
+  const overChange = useCallback(() => {
+    if (!isFollowing) return "Follow";
+
+    if (mouseOver) return "Unfollow";
+
+    return "Following";
+  }, [mouseOver, isFollowing]);
+
   return (
     <div className="border-b-[1px] border-neutral-800 p-4">
       <div className="flex justify-end">
         {currentUser?.id === userId ? (
-          <Button secondary label="Edit" onClick={() => editModal.onOpen()} />
-        ) : (
           <Button
-            secondary={!isFollowing}
-            label={isFollowing ? "Unfollow" : "follow"}
-            onClick={() => toggleFollow()}
-            outline={isFollowing}
+            secondary
+            label="Edit"
+            onClick={() => editModal.onOpen()}
+            medium
           />
+        ) : (
+          <div
+            onMouseOver={() => setMouseOver(true)}
+            onMouseLeave={() => setMouseOver(false)}
+          >
+            <Button
+              label={overChange()}
+              onClick={() => toggleFollow()}
+              outline={isFollowing}
+              terciary={!isFollowing}
+              primary={isFollowing}
+              medium
+            />
+          </div>
         )}
       </div>
       <div className="mt-8 px-4">

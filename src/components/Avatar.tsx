@@ -1,7 +1,8 @@
-import useUser from "@/hooks/useUser";
-import { useRouter } from "next/router";
-import Image from "next/image";
 import React, { useCallback } from "react";
+
+import Image from "next/image";
+import { useRouter } from "next/router";
+import useUser from "@/hooks/useUser";
 
 export type AvatarProps = {
   userId: string;
@@ -21,7 +22,7 @@ const Avatar: React.FunctionComponent<AvatarProps> = ({
     (event: any) => {
       event.stopPropagation();
 
-      const url = `/users/${userId}`;
+      const url = `/${userId}`;
 
       router.push(url);
     },
@@ -32,8 +33,8 @@ const Avatar: React.FunctionComponent<AvatarProps> = ({
     <div
       className={`
       ${hasBorder ? "border-4 border-black" : ""} 
-      ${isLarge ? "h-32 " : "h-12"}
-      ${isLarge ? "w-32 " : "w-12"}
+      ${isLarge ? "h-32 " : "h-10"}
+      ${isLarge ? "w-32 " : "w-10"}
       rounded-full hover:opacity-90 transition cursor-pointer relative
       `}
     >

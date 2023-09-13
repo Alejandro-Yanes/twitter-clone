@@ -1,9 +1,10 @@
-import useLoginModal from "@/hooks/zustand/useLoginModal";
 import React, { useCallback, useState } from "react";
+
 import Input from "../Input";
-import Modal from "../Modal";
-import useRegisterModal from "@/hooks/zustand/useRegisterModal";
+import Modal from "./Layouts/InputModalLayout";
 import { signIn } from "next-auth/react";
+import useLoginModal from "@/hooks/zustand/useLoginModal";
+import useRegisterModal from "@/hooks/zustand/useRegisterModal";
 
 export interface Props {}
 
@@ -81,7 +82,7 @@ const LoginModal: React.FunctionComponent<Props> = (props) => {
       onClose={loginModal.onClose}
       body={bodyContent}
       onSubmit={onSubmit}
-      actionLabel="Submit"
+      actionLabel="Log In"
       title="Log In"
       footer={footerContent}
     />

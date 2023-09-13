@@ -1,13 +1,12 @@
-import fetcher from "@/lib/fetcher";
-import { User } from "@prisma/client";
-
-import useSWR from "swr";
-import useCurrentUser from "./useCurrentUser";
-import useUser from "./useUser";
-import useLoginModal from "./zustand/useLoginModal";
 import { useCallback, useMemo } from "react";
+
+import { User } from "@prisma/client";
 import axios from "axios";
+import fetcher from "@/lib/fetcher";
 import { toast } from "react-hot-toast";
+import useCurrentUser from "./useCurrentUser";
+import useLoginModal from "./zustand/useLoginModal";
+import useUser from "./useUser";
 
 const useFollow = (userId: string) => {
   const { data: currentUser, mutate: mutateCurrentUser } = useCurrentUser();
@@ -39,7 +38,11 @@ const useFollow = (userId: string) => {
       mutateCurrentUser();
       mutateFetchedUser();
 
-      toast.success(`You are following ${followingUser?.name}`);
+      if (isFollowing) {
+        toast.error(`You unfollowed @${followingUser?.username}`);
+      } else {
+        toast.success(`You are following @${followingUser?.username}`);
+      }
     } catch (err) {
       toast.error("Error Following");
     }

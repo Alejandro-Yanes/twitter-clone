@@ -1,17 +1,20 @@
-import useLoginModal from "@/hooks/zustand/useLoginModal";
 import React, { useCallback } from "react";
+
 import { FaFeather } from "react-icons/fa";
+import useCreatePostModal from "@/hooks/zustand/useCreatePostModal";
+import useLoginModal from "@/hooks/zustand/useLoginModal";
+import useRegisterModal from "@/hooks/zustand/useRegisterModal";
 
 export interface SidebarTweetButtonProps {}
 
 const SidebarTweetButton: React.FunctionComponent<SidebarTweetButtonProps> = (
   props
 ) => {
-  const loginModal = useLoginModal();
+  const createPostModal = useCreatePostModal();
 
   const handleClick = useCallback(() => {
-    loginModal.onOpen();
-  }, []);
+    createPostModal.onOpen();
+  }, [createPostModal]);
   return (
     <button onClick={handleClick} className="w-[100%]">
       <div className="mt-6 lg:hidden rounded-full h-14 w-14 p-4 flex items-center justify-center bg-sky-500 hover:bg-opacity-80 transition cursor-pointer">

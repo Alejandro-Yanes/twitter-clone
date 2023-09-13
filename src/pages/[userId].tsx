@@ -1,16 +1,15 @@
+import { ClipLoader } from "react-spinners";
 import Header from "@/components/Header";
 import PostFeed from "@/components/posts/PostFeed";
+import React from "react";
 import UserBio from "@/components/user/UserBio";
 import UserHero from "@/components/user/UserHero";
-
-import useUser from "@/hooks/useUser";
 import { useRouter } from "next/router";
-import React from "react";
-import { ClipLoader } from "react-spinners";
+import useUser from "@/hooks/useUser";
 
-export type UserViewProps = {};
+export type ProfileViewProps = {};
 
-const UserView: React.FunctionComponent<UserViewProps> = (props) => {
+const ProfileView: React.FunctionComponent<ProfileViewProps> = (props) => {
   const router = useRouter();
   const { userId } = router.query;
 
@@ -41,4 +40,4 @@ const UserView: React.FunctionComponent<UserViewProps> = (props) => {
   );
 };
 
-export default UserView;
+export default ProfileView;

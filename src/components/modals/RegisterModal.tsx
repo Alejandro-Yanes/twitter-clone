@@ -1,11 +1,12 @@
-import useLoginModal from "@/hooks/zustand/useLoginModal";
 import React, { useCallback, useState } from "react";
+
 import Input from "../Input";
-import Modal from "../Modal";
-import useRegisterModal from "@/hooks/zustand/useRegisterModal";
+import Modal from "./Layouts/InputModalLayout";
 import axios from "axios";
-import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
+import useLoginModal from "@/hooks/zustand/useLoginModal";
+import useRegisterModal from "@/hooks/zustand/useRegisterModal";
 
 export interface Props {}
 

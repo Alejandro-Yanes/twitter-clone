@@ -1,6 +1,6 @@
-import { useRouter } from "next/router";
-import React from "react";
 import { BsTwitter } from "react-icons/bs";
+import React from "react";
+import { useRouter } from "next/router";
 
 export interface Props {}
 

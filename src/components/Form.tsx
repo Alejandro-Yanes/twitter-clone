@@ -1,12 +1,14 @@
-import useCurrentUser from "@/hooks/useCurrentUser";
-import usePosts from "@/hooks/usePosts";
-import useLoginModal from "@/hooks/zustand/useLoginModal";
-import useRegisterModal from "@/hooks/zustand/useRegisterModal";
-import axios from "axios";
 import React, { useCallback, useState } from "react";
-import { toast } from "react-hot-toast";
-import Button from "./Button";
+
 import Avatar from "./Avatar";
+import Button from "./Button";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import useLoginModal from "@/hooks/zustand/useLoginModal";
+import usePost from "@/hooks/usePost";
+import usePosts from "@/hooks/usePosts";
+import useRegisterModal from "@/hooks/zustand/useRegisterModal";
 
 export type FormProps = {
   placeholder: string;
@@ -24,6 +26,7 @@ const Form: React.FunctionComponent<FormProps> = ({
 
   const { data: currentUser } = useCurrentUser();
   const { mutate: mutatePosts } = usePosts();
+  const { mutate: mutatePost } = usePost(postId as string);
 
   const [body, setBody] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -31,18 +34,28 @@ const Form: React.FunctionComponent<FormProps> = ({
   const onSubmit = useCallback(async () => {
     try {
       setIsLoading(true);
-      await axios.post("/api/posts", { body });
 
-      toast.success("Tweet Created");
+      const url = isComment ? `/api/comments?postId=${postId}` : "/api/posts";
+      const successMessage = isComment ? `Comment created` : "Tweet Created";
+
+      await axios.post(url, { body });
+
+      toast.success(successMessage);
       setBody("");
       mutatePosts();
+      if (isComment) {
+        mutatePost();
+      }
     } catch (err) {
+      const ErrorMessage = isComment
+        ? `Comment not created`
+        : "Tweet not Created";
       console.log(err);
-      toast.error("Tweet not created");
+      toast.error(ErrorMessage);
     } finally {
       setIsLoading(false);
     }
-  }, [body, setBody, mutatePosts, setIsLoading]);
+  }, [body, setBody, mutatePosts, setIsLoading, isComment, mutatePost]);
 
   return (
     <div className="border-b-[1px] border-neutral-800 px-5 py-2">
@@ -65,6 +78,8 @@ const Form: React.FunctionComponent<FormProps> = ({
                 disabled={isLoading || !body}
                 onClick={onSubmit}
                 label="Tweet"
+                medium
+                secondary
               />
             </div>
           </div>
@@ -75,8 +90,13 @@ const Form: React.FunctionComponent<FormProps> = ({
             Welcome to twitter
           </h1>
           <div className="flex flex-row items-center justify-center gap-4">
-            <Button label="Login" onClick={loginModal.onOpen} />
-            <Button label="Register" secondary onClick={registerModal.onOpen} />
+            <Button label="Login" onClick={loginModal.onOpen} medium terciary />
+            <Button
+              label="Register"
+              secondary
+              onClick={registerModal.onOpen}
+              medium
+            />
           </div>
         </div>
       )}

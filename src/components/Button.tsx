@@ -8,6 +8,12 @@ type ButtonProps = {
   onClick: () => void;
   disabled?: boolean;
   outline?: boolean;
+  small?: boolean;
+  medium?: boolean;
+  primary?: boolean;
+  terciary?: boolean;
+  danger?: boolean;
+  dangerOutlined?: boolean;
 };
 
 const Button: React.FunctionComponent<ButtonProps> = ({
@@ -18,6 +24,12 @@ const Button: React.FunctionComponent<ButtonProps> = ({
   onClick,
   disabled,
   outline,
+  small,
+  medium,
+  primary,
+  terciary,
+  danger,
+  dangerOutlined,
 }) => {
   return (
     <button
@@ -25,16 +37,22 @@ const Button: React.FunctionComponent<ButtonProps> = ({
       onClick={onClick}
       className={`disabled:opacity-70 disabled:cursor-not-allowed rounded-full font-semibold hover:opacity-80 transition 
                 ${fullWidth ? "w-full" : "w-fit"}
-                ${secondary ? "bg-white" : "bg-sky-500"}
-                ${secondary ? "text-black" : "text-white"}
-                ${secondary ? "border-black" : "border-ski-500"}
-                ${large ? "text-xl" : "text-md"}
+                ${medium ? "text-md" : ""}
+                ${small ? "text-xs" : ""}
+                ${large ? "text-xl" : ""}
                 ${large ? "px-5" : "px-4"}
                 ${large ? "py-3" : "py-2"}
-                ${outline ? "bg-transparent" : ""}
-                ${outline ? "border-white" : ""}
-                ${outline ? "text-white" : ""}}
-                ${outline ? "border-2" : ""}`}
+                ${outline ? "border" : ""}
+                ${primary ? "text-white bg-transparent border-white" : ""}
+                ${secondary ? "bg-sky-500 text-white" : ""}
+                ${terciary ? "text-black bg-white" : ""}
+                ${danger ? "text-white bg-red-500" : ""}
+                ${
+                  dangerOutlined
+                    ? "text-red-500 border-red-500 bg-transparent"
+                    : ""
+                }
+                `}
     >
       {label}
     </button>

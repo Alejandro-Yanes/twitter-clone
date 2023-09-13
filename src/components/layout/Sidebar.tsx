@@ -1,37 +1,45 @@
+import { BsBell, BsBellFill, BsHouse, BsHouseFill } from "react-icons/bs";
 import React, { useCallback } from "react";
-import { BsHouseFill, BsBellFill } from "react-icons/bs";
+
 import { BiLogOut } from "react-icons/bi";
+import { BsDot } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
-import SidebarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
+import SidebarLogo from "./SidebarLogo";
 import SidebarTweetButton from "./SidebarTweetButton";
-import useCurrentUser from "@/hooks/useCurrentUser";
 import { signOut } from "next-auth/react";
+import useCurrentUser from "@/hooks/useCurrentUser";
 import { useRouter } from "next/router";
 
 export interface Props {}
 
 const Sidebar: React.FunctionComponent<Props> = (props) => {
-  const { data: user } = useCurrentUser();
+  const { data: currentUser } = useCurrentUser();
   const router = useRouter();
   const items = [
     {
       label: "Home",
       href: "/",
-      icon: BsHouseFill,
+      icon: BsHouse,
+      iconFill: BsHouseFill,
       auth: false,
+      alert: false,
     },
     {
       label: "Notifications",
       href: "/notifications",
-      icon: BsBellFill,
+      icon: BsBell,
+      iconFill: BsBellFill,
       auth: true,
+      alert: currentUser?.hasNotification || false,
     },
     {
       label: "Profile",
-      href: `/users/${user?.id}`,
-      icon: BsHouseFill,
+      href: `/${currentUser?.id}`,
+      icon: BsHouse,
+      iconFill: BsHouseFill,
       auth: true,
+      alert: false,
     },
   ];
 
@@ -53,13 +61,16 @@ const Sidebar: React.FunctionComponent<Props> = (props) => {
               href={item.href}
               onClick={() => {}}
               auth={item.auth}
+              alert={item.alert}
+              iconFill={item.iconFill}
             />
           ))}
-          {user && (
+          {currentUser && (
             <SidebarItem
-              onClick={() => signOut()}
+              onClick={handleLogout}
               icon={BiLogOut}
               label="Logout"
+              iconFill={BiLogOut}
             />
           )}
           <SidebarTweetButton />

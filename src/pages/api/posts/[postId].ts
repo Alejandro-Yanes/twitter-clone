@@ -7,35 +7,37 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "GET") {
+  if (req.method !== "GET" && req.method !== "DELETE") {
     return res.status(404).end();
   }
 
+  const { postId } = req.query;
+
+  if (!postId || typeof postId !== "string") {
+    throw new Error("Invalid Post id");
+  }
+
   try {
-    const { postId } = req.query;
-
-    if (!postId || typeof postId !== "string") {
-      throw new Error("Invalid Post id");
-    }
-
-    const post = await prisma.post.findUnique({
-      where: {
-        id: postId,
-      },
-      include: {
-        user: true,
-        comments: {
-          include: {
-            user: true,
-          },
-          orderBy: {
-            createdAt: "desc",
+    if (req.method === "GET") {
+      const post = await prisma.post.findUnique({
+        where: {
+          id: postId,
+        },
+        include: {
+          user: true,
+          comments: {
+            include: {
+              user: true,
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
           },
         },
-      },
-    });
+      });
 
-    return res.status(200).json(post);
+      return res.status(200).json(post);
+    }
   } catch (error) {
     console.log(error);
     return res.status(404).end();

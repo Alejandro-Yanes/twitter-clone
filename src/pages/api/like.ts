@@ -30,6 +30,28 @@ export default async function handler(
 
     if (req.method === "POST") {
       updatedLikedIds.push(currentUser.id);
+
+      try {
+        if (post?.userId) {
+          await prisma.notification.create({
+            data: {
+              body: " Someone liked your tweet!",
+              userId: post.userId,
+            },
+          });
+
+          await prisma.user.update({
+            where: {
+              id: post.userId,
+            },
+            data: {
+              hasNotification: true,
+            },
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     if (req.method === "DELETE") {
